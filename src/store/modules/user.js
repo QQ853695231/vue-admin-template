@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUserInfo } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
@@ -26,10 +26,17 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
+        console.log(response)
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
+        if (data) {
+          commit('SET_TOKEN', data.username)
+          commit('SET_NAME', data.displayName)
+          setUserInfo(JSON.stringify(data));
+          setToken(data.username)
+          resolve()
+        } else {
+          reject('请输入正确的用户名和密码！')
+        }
       }).catch(error => {
         reject(error)
       })
@@ -60,14 +67,15 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      commit('SET_TOKEN', '')
+      removeToken()
+      resetRouter()
+      resolve()
+      // logout(state.token).then(() => {
+      //
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   },
 

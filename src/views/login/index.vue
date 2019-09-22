@@ -75,7 +75,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -112,11 +112,12 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
-          }).catch(() => {
+          }).catch((e) => {
             this.loading = false
+            this.$message.error(e)
           })
         } else {
-          console.log('error submit!!')
+          console.log('请输入用户名或密码！');
           return false
         }
       })
