@@ -15,6 +15,7 @@
           v-model="form.billMonth"
           type="month"
           value-format="yyyy-MM"
+          @change="queryBillListByMonth"
           placeholder="选择月">
         </el-date-picker>
       </el-form-item>
@@ -65,12 +66,27 @@
         {{billTotal}}
       </span>
     </el-form>
+    <div class="current-month-table">
+      <el-table :data="currentMonthBillList" border>
+        <el-table-column label="账单银行" prop="bankName"></el-table-column>
+        <el-table-column label="原始账单金额">
+          <template slot-scope="scope">
+            {{scope.row.billMoney - scope.row.commission }}
+          </template>
+        </el-table-column>
+        <el-table-column label="账单手续费" prop="commission"></el-table-column>
+        <el-table-column label="账单总额" prop="billMoney"></el-table-column>
+        <el-table-column label="最后还款日" prop="lastReturnMoneyDate"></el-table-column>
+        <el-table-column label="备注" prop="remark"></el-table-column>
+        <el-table-column label="创建时间" prop="createTime"></el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
 <script>
     import {getBankList} from '@/api/Bank'
-    import {addBill} from '@/api/Bill'
+    import {addBill,getBillListByBillMonth} from '@/api/Bill'
 
 
     export default {
@@ -86,7 +102,8 @@
 
                 },
                 loading: false,
-                bankList: []
+                bankList: [],
+                currentMonthBillList: []
             }
         },
         beforeMount() {
@@ -95,6 +112,16 @@
             })
         },
         methods: {
+            queryBillListByMonth() {
+                if (this.form.billMonth) {
+                    getBillListByBillMonth(this.form.billMonth).then(res => {
+                        console.log(res)
+                        this.currentMonthBillList = res.data
+                    })
+                } else {
+                    this.currentMonthBillList = []
+                }
+            },
             onSubmit() {
                 this.loading = true
                 addBill(this.form).then(res => {
@@ -106,6 +133,7 @@
                          this.form.commission= 0,
                          this.form.total= 0,
                          this.form.remark= ''
+                        this.queryBillListByMonth()
                     }
                     this.loading = false;
                 }).catch(e => {

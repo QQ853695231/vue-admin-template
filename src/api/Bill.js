@@ -7,3 +7,10 @@ export function addBill(billData) {
     data: billData
   })
 }
+
+export function getBillListByBillMonth(billMonth) {
+  return request({
+    url: `/bill/month/${billMonth}/list`,
+    method: 'get'
+  })
+}
