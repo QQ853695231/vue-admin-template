@@ -14,6 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import VCharts from 'v-charts'
 
 /**
  * If you don't want to use mock-server
@@ -25,13 +26,13 @@ import '@/permission' // permission control
  */
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
-
-Vue.config.productionTip = false
+Vue.use(ElementUI, { locale });
+Vue.use(VCharts);
+Vue.config.productionTip = false;
 
 new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App)
-})
+});
