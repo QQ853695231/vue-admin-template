@@ -1,32 +1,33 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ userInfo() }}</div>
+  <div class="preview-container">
+    <ul class="infinite-list" v-infinite-scroll="load">
+      <li v-for="i in count" class="infinite-list-item">{{ i }}</li>
+    </ul>
   </div>
+
 </template>
 
 <script>
-    import {getUserInfo} from '@/utils/auth'
-
     export default {
-        name: 'Dashboard',
-        methods: {
-            userInfo() {
-                return getUserInfo().displayName;
+        data () {
+            return {
+                count: 0
             }
         },
-        computed: {}
+        methods: {
+            load () {
+                this.count += 2
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
-  .dashboard {
-    &-container {
-      margin: 30px;
-    }
+  .preview-container {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    overflow: auto;
 
-    &-text {
-      font-size: 30px;
-      line-height: 46px;
-    }
   }
 </style>
