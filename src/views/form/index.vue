@@ -46,34 +46,29 @@
         </el-input-number>
       </el-form-item>
 
-      <br/>
+      <br />
       <el-form-item label="备注：">
         <el-input
           v-model="form.remark"
           type="textarea"
           resize="both"
+          style="width: 500px;"
           placeholder="备注">
         </el-input>
       </el-form-item>
 
-      <br/>
+      <br />
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit" v-loading="loading">账单录入</el-button>
         <el-button type="danger" @click="onCancel">重置</el-button>
       </el-form-item>
-      <span style="display: none;">
-        {{billTotal}}
-      </span>
+      <span style="display: none;">{{ billTotal }}</span>
     </el-form>
     <div class="current-month-table">
       <el-table :data="currentMonthBillList" border>
         <el-table-column label="账单银行" prop="bankName"></el-table-column>
-        <el-table-column label="原始账单金额">
-          <template slot-scope="scope">
-            {{scope.row.billMoney - scope.row.commission }}
-          </template>
-        </el-table-column>
+        <el-table-column label="原始账单金额" prop="originalBillMoney"></el-table-column>
         <el-table-column label="账单手续费" prop="commission"></el-table-column>
         <el-table-column label="账单总额" prop="billMoney"></el-table-column>
         <el-table-column label="最后还款日" prop="lastReturnMoneyDate"></el-table-column>
@@ -99,7 +94,6 @@
                     commission: 0,
                     total: 0,
                     remark: ''
-
                 },
                 loading: false,
                 bankList: [],
@@ -141,10 +135,16 @@
                 })
             },
             onCancel() {
-                this.$message({
-                    message: 'cancel!',
-                    type: 'warning'
-                })
+                this.form = {
+                        billMonth: '',
+                        bankId: '',
+                        billMoney: 0,
+                        commission: 0,
+                        total: 0,
+                        remark: ''
+                }
+
+                this.currentMonthBillList = []
             },
             caldCommission() {
                 if (this.form.billMoney === undefined || this.form.billMoney === 0 ) {
