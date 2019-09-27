@@ -14,3 +14,12 @@ export function getBillListByBillMonth(billMonth) {
     method: 'get'
   })
 }
+
+
+export function getBillPreviewPageInfo(queryData) {
+  return request({
+    url: `/bill/monthly/page/list`,
+    method: 'get',
+    params: queryData
+  })
+}
